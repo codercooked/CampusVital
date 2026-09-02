@@ -14,7 +14,7 @@ const getGenieHeaders = () => ({
 });
 
 const getPrompt = (question) => {
-  return `User query: "${question}"\n\nINSTRUCTION: If the user query is asking to book, reserve, or schedule a room, you must act as a data extractor. DO NOT say you cannot book rooms. DO NOT generate SQL. You are NOT making a booking, you are just extracting the requested booking parameters into JSON.\n\nIf it IS a booking request, reply EXACTLY and ONLY with this JSON block (do not add any other text):\n\`\`\`json\n{\n  "action": "BOOK_ROOM",\n  "room_name": "Room Name or Number",\n  "date": "YYYY-MM-DD",\n  "start_time": "HH:MM",\n  "end_time": "HH:MM",\n  "purpose": "Purpose"\n}\n\`\`\`\nAssume the current date is ${new Date().toISOString().split('T')[0]}. Use reasonable defaults for missing times (e.g. "10:00" to "11:00" in 24h format). If it is NOT a booking request, answer their question normally using the database.`;
+  return `User query: "${question}"\n\nINSTRUCTION: If the user query is asking to book, reserve, or schedule a room, you must act as a data extractor. DO NOT say you cannot book rooms. DO NOT generate SQL. You are NOT making a booking, you are just extracting the requested booking parameters into JSON.\n\nIf it IS a booking request, reply EXACTLY and ONLY with this JSON block:\n\`\`\`json\n{\n  "action": "BOOK_ROOM",\n  "room_name": "Room Name or Number",\n  "date": "YYYY-MM-DD",\n  "start_time": "HH:MM",\n  "end_time": "HH:MM",\n  "purpose": "Purpose"\n}\n\`\`\`\nAssume the current date is ${new Date().toISOString().split('T')[0]}. Use reasonable defaults for missing times.\n\nIf it is NOT a booking request, you MUST answer the question comprehensively. \n\nCRITICAL RESOURCE RULE: If the user asks for a room for a specific number of people, you MUST find the OPTIMAL room (the smallest available room that fits the capacity). You should order your search by capacity ASC.\n\nAlways format your response to include:\n1. The Answer: A clear, direct response to the query recommending the most optimal rooms.\n2. Data Evidence & Reasoning: Explicitly explain exactly WHY you gave this answer based on capacity mapping. \n*SUSTAINABILITY REQUIREMENT*: If you are recommending an optimally sized room, you MUST explicitly state the resource savings. Compare the savings realistically to a moderately oversized room, NOT the absolute biggest 500-person auditorium (e.g., "By using a closely matched 80-person room instead of a standard 120-person lecture hall, you save an estimated 15 kW of electricity and HVAC power per hour").\n\nWhen explaining your data evidence, briefly mention that your insights are powered by Databricks SQL Serverless and governed by Unity Catalog.`;
 };
 
 const handlePotentialBooking = (answerText, originalQuestion) => {
@@ -117,7 +117,7 @@ const pollMessage = async (conversationId, messageId) => {
     // Wait before polling — Genie needs processing time
     await new Promise(resolve => setTimeout(resolve, delay));
 
-    const url = `${DATABRICKS_HOST}/api/2.0/genie/spaces/${GENIE_SPACE_ID}/conversations/${conversationId}/messages/${messageId}`;
+    const url = `${process.env.DATABRICKS_HOST}/api/2.0/genie/spaces/${process.env.GENIE_SPACE_ID}/conversations/${conversationId}/messages/${messageId}`;
     
     try {
       const res = await fetch(url, { headers: getGenieHeaders() });

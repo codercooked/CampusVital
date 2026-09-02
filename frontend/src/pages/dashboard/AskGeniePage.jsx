@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { Sparkles, Send, RotateCcw } from 'lucide-react';
 import GlassCard from '../../components/shared/GlassCard';
 import LoadingBubble from '../../components/shared/LoadingBubble';
@@ -44,11 +45,14 @@ const AskGeniePage = () => {
 
   // Premium Predictive UI Component
   const PredictiveInsightCard = () => (
-    <div className="mt-4 bg-[#0A0D16] border border-[#FFFFFF]/20 rounded-xl overflow-hidden shadow-[0_0_20px_rgba(255,255,255,0.05)]">
-      <div className="bg-[#FFFFFF]/5 px-4 py-2 border-b border-[#FFFFFF]/10 flex items-center gap-2">
-        <div className="w-2 h-2 rounded-full bg-[#00FFB2] shadow-[0_0_8px_#00FFB2] animate-pulse"></div>
-        <span className="text-xs font-bold text-[#FFFFFF] uppercase tracking-widest">Predictive Intelligence Model</span>
-        <span className="text-[10px] text-[rgba(240,244,255,0.45)] ml-auto bg-[#000000] px-2 py-0.5 rounded-md border border-[#FFFFFF]/10">Confidence: 94%</span>
+    <div className="mt-4 bg-[#0A0D16] border border-orange-500/30 rounded-xl overflow-hidden shadow-[0_0_20px_rgba(249,115,22,0.1)]">
+      <div className="bg-[#FFFFFF]/5 px-4 py-2 border-b border-orange-500/20 flex items-center gap-2">
+        <div className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_8px_#f97316] animate-pulse"></div>
+        <span className="text-xs font-bold text-white uppercase tracking-widest">Mosaic AI Predictive Model</span>
+        <div className="ml-auto flex items-center gap-2">
+          <span className="text-[10px] text-white/50 border border-white/10 px-2 py-0.5 rounded-md">MLflow: campus_avail_v2</span>
+          <span className="text-[10px] text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded-md border border-orange-500/20">Confidence: 94%</span>
+        </div>
       </div>
       
       <div className="p-5 space-y-4">
@@ -60,19 +64,19 @@ const AskGeniePage = () => {
         <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-[#FFFFFF]/10 to-transparent"></div>
         
         <div className="flex gap-4">
-          <div className="w-1.5 rounded-full bg-gradient-to-b from-[#FFFFFF] to-[#888888]"></div>
+          <div className="w-1.5 rounded-full bg-gradient-to-b from-orange-400 to-[#888888]"></div>
           <div>
-            <span className="text-[10px] uppercase tracking-widest text-[#00FFB2] font-bold">High Probability Opening</span>
+            <span className="text-[10px] uppercase tracking-widest text-orange-400 font-bold">High Probability Opening</span>
             <h3 className="text-lg font-heading font-bold text-[#FFFFFF] mt-1 mb-2">Room B203 <span className="text-sm font-normal text-[#FFFFFF]/50">(Capacity: 120)</span></h3>
             <p className="text-sm text-[rgba(240,244,255,0.7)] leading-relaxed">
-              There is a recurring <strong>Friday 3:00 PM - 5:00 PM</strong> lecture (CS-401) scheduled here. However, this class has been <span className="text-[#FFFFFF] border-b border-[#FFFFFF]/30">cancelled 4 out of the last 6 Fridays</span>.
+              Based on historical Delta Lake logs, a recurring <strong>Friday 3:00 PM - 5:00 PM</strong> lecture (CS-401) scheduled here has been <span className="text-[#FFFFFF] border-b border-[#FFFFFF]/30">cancelled 4 out of the last 6 Fridays</span>.
             </p>
             <div className="mt-4 flex items-center gap-3">
-              <button className="bg-[#FFFFFF] text-[#000000] text-xs font-bold px-4 py-2 rounded-lg hover:opacity-90 transition-opacity shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+              <button className="bg-orange-500 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors shadow-[0_0_15px_rgba(249,115,22,0.3)]">
                 Auto-Book if Cancelled
               </button>
               <button className="border border-[#FFFFFF]/20 text-[#FFFFFF] text-xs font-bold px-4 py-2 rounded-lg hover:bg-[#FFFFFF]/5 transition-colors">
-                View Historical Data
+                View Delta Analytics
               </button>
             </div>
           </div>
@@ -86,9 +90,12 @@ const AskGeniePage = () => {
       {/* Left Chat Area */}
       <GlassCard className="col-span-8 rounded-2xl flex flex-col h-full overflow-hidden relative">
         <div className="p-5 border-b border-[rgba(255,255,255,0.08)] flex items-center gap-3 bg-black/40 backdrop-blur-md z-10">
-          <Sparkles className="w-6 h-6 text-[#FFFFFF]" />
-          <h2 className="font-heading text-xl font-semibold">Genie</h2>
-          <span className="text-xs text-[rgba(240,244,255,0.45)] ml-auto border border-white/10 bg-black/50 px-3 py-1 rounded-full">Connected to Databricks</span>
+          <Sparkles className="w-6 h-6 text-orange-500" />
+          <h2 className="font-heading text-xl font-semibold">Databricks Genie</h2>
+          <span className="text-xs text-[rgba(240,244,255,0.45)] ml-auto border border-orange-500/20 bg-orange-500/10 text-orange-400 px-3 py-1 rounded-full flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse"></div>
+            Powered by Mosaic AI
+          </span>
         </div>
 
         <div className="flex-1 overflow-y-auto p-5 scroll-smooth relative z-0">
@@ -114,10 +121,12 @@ const AskGeniePage = () => {
                     max-w-[85%] px-5 py-4 text-sm shadow-xl
                     ${msg.role === 'user' 
                       ? 'bg-white/10 text-white rounded-2xl rounded-br-md border border-white/10 backdrop-blur-md' 
-                      : 'border border-white/10 bg-black/60 rounded-2xl rounded-bl-md backdrop-blur-md'
+                      : 'border border-orange-500/20 bg-black/80 rounded-2xl rounded-bl-md backdrop-blur-md'
                     }
                   `}>
-                    <p className="whitespace-pre-wrap leading-relaxed text-white">{msg.content}</p>
+                    <div className="whitespace-pre-wrap leading-relaxed text-white prose prose-invert max-w-none prose-sm prose-p:my-2 prose-headings:my-3">
+                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    </div>
                     
                     {/* Render Predictive Insight if flagged */}
                     {msg.isPredictive && <PredictiveInsightCard />}
@@ -125,7 +134,7 @@ const AskGeniePage = () => {
                     {/* Standard SQL Reveal */}
                     {msg.sql && (
                       <div className="mt-4 flex flex-col gap-3 border-t border-white/10 pt-4">
-                        <SqlReveal sql={msg.sql} description="SQL Query executed by Genie" />
+                        <SqlReveal sql={msg.sql} description="Databricks SQL Serverless Execution" />
                         {msg.attachment_id && (
                           <QueryDataReveal convId={msg.conversation_id} msgId={msg.message_id} attachId={msg.attachment_id} />
                         )}
@@ -136,7 +145,7 @@ const AskGeniePage = () => {
               ))}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="border border-white/10 bg-black/60 rounded-2xl rounded-bl-md px-5 py-4 max-w-[80%] backdrop-blur-md shadow-xl">
+                  <div className="border border-orange-500/20 bg-black/80 rounded-2xl rounded-bl-md px-5 py-4 max-w-[80%] backdrop-blur-md shadow-xl">
                     <LoadingBubble />
                   </div>
                 </div>
@@ -146,14 +155,14 @@ const AskGeniePage = () => {
           )}
         </div>
 
-        <div className="p-4 border-t border-[rgba(255,255,255,0.08)] bg-[#0F1420]/50 backdrop-blur-md">
+        <div className="p-4 border-t border-[rgba(255,255,255,0.08)] bg-black/40 backdrop-blur-md">
           <form onSubmit={handleSend} className="flex items-center gap-3">
             <input
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Ask Genie anything about your campus..."
-              className="flex-1 bg-[#0F1420] border border-[rgba(255,255,255,0.08)] rounded-xl px-4 py-3 text-[#F0F4FF] placeholder:text-[rgba(240,244,255,0.3)] text-sm outline-none focus:border-[#FFFFFF]/50 transition-colors"
+              className="flex-1 bg-[#0F1420] border border-[rgba(255,255,255,0.08)] rounded-xl px-4 py-3 text-[#F0F4FF] placeholder:text-[rgba(240,244,255,0.3)] text-sm outline-none focus:border-orange-500/50 transition-colors shadow-inner"
             />
             <button
               type="button"
@@ -166,7 +175,7 @@ const AskGeniePage = () => {
             <button
               type="submit"
               disabled={isLoading || !inputValue.trim()}
-              className="bg-[#FFFFFF] text-[#000000] p-3 rounded-xl disabled:opacity-50 transition-opacity hover:opacity-90"
+              className="bg-orange-500 text-white p-3 rounded-xl disabled:opacity-50 transition-all hover:bg-orange-600 shadow-[0_0_15px_rgba(249,115,22,0.3)]"
             >
               <Send className="w-5 h-5" />
             </button>
@@ -175,24 +184,30 @@ const AskGeniePage = () => {
       </GlassCard>
 
       {/* Right Sidebar Area */}
-      <GlassCard className="col-span-4 rounded-2xl p-5 h-full overflow-y-auto space-y-6">
+      <GlassCard className="col-span-4 rounded-2xl p-5 h-full overflow-y-auto space-y-6 bg-black/40 backdrop-blur-md">
         <div>
-          <h3 className="text-sm font-heading font-semibold text-[#F0F4FF]">Genie Space</h3>
-          <div className="mt-3 flex flex-col gap-2 text-xs">
-            <div className="flex justify-between">
-              <span className="text-[rgba(240,244,255,0.45)]">Host:</span>
-              <span className="font-mono text-[#F0F4FF] truncate max-w-[150px]">campus.databricks.net</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-[rgba(240,244,255,0.45)]">Space ID:</span>
-              <span className="font-mono text-[#F0F4FF]">01ef8a2c...</span>
+          <h3 className="text-sm font-heading font-semibold text-[#F0F4FF] flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-orange-500" /> Databricks Ecosystem
+          </h3>
+          <div className="mt-4 flex flex-col gap-3 text-xs">
+            <div className="flex justify-between items-center">
+              <span className="text-[rgba(240,244,255,0.45)]">Databricks SQL</span>
+              <span className="text-[#FFFFFF] bg-white/5 border border-white/10 px-2 py-0.5 rounded">Serverless</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-[rgba(240,244,255,0.45)]">Status:</span>
-              <span className="text-green-400 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
-                Connected
+              <span className="text-[rgba(240,244,255,0.45)]">Governance</span>
+              <span className="text-[#FFFFFF] bg-white/5 border border-white/10 px-2 py-0.5 rounded">Unity Catalog</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-[rgba(240,244,255,0.45)]">Vector Search</span>
+              <span className="text-green-400 flex items-center gap-1.5 bg-green-500/10 px-2 py-0.5 rounded border border-green-500/20">
+                <span className="w-1 h-1 rounded-full bg-green-400 animate-pulse"></span>
+                Active
               </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-[rgba(240,244,255,0.45)]">Genie Space</span>
+              <span className="font-mono text-[#F0F4FF] bg-white/5 px-2 py-0.5 rounded border border-white/10">01ef8a2c...</span>
             </div>
           </div>
         </div>

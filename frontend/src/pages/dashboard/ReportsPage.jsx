@@ -3,11 +3,11 @@ import { FileText, Loader2, Download, Plus, Sparkles, Filter, Database, Calendar
 import GlassCard from '../../components/shared/GlassCard';
 
 const INITIAL_REPORTS = [
-  { id: 1, title: 'Monthly Occupancy & Waste - August 2026', type: 'AI Synthesis', date: '2026-08-31', size: '2.4 MB', status: 'Ready' },
+  { id: 1, title: 'Monthly Occupancy & Waste - August 2026', type: 'Mosaic AI Synthesis', date: '2026-08-31', size: '2.4 MB', status: 'Ready' },
   { id: 2, title: 'Utility Consumption Analysis Q3', type: 'Databricks SQL', date: '2026-08-28', size: '1.1 MB', status: 'Ready' },
-  { id: 3, title: 'Room Utilization Weekly Digest', type: 'Scheduled', date: '2026-09-01', size: '850 KB', status: 'Ready' },
-  { id: 4, title: 'Booking Trends September Forecast', type: 'Predictive', date: '2026-09-02', size: '--', status: 'Generating' },
-  { id: 5, title: 'Energy Efficiency Recommendations', type: 'AI Synthesis', date: '2026-08-25', size: '3.2 MB', status: 'Ready' },
+  { id: 3, title: 'Room Utilization Weekly Digest', type: 'Delta Live Tables', date: '2026-09-01', size: '850 KB', status: 'Ready' },
+  { id: 4, title: 'Booking Trends September Forecast', type: 'MLflow Predictive', date: '2026-09-02', size: '--', status: 'Generating' },
+  { id: 5, title: 'Energy Efficiency Recommendations', type: 'Mosaic AI Synthesis', date: '2026-08-25', size: '3.2 MB', status: 'Ready' },
 ];
 
 const ReportsPage = () => {
@@ -89,28 +89,28 @@ const ReportsPage = () => {
       <div className="grid grid-cols-3 gap-6">
         <GlassCard className="p-6 flex items-center gap-5 hover:scale-[1.02] transition-transform duration-300">
           <div className="w-12 h-12 rounded-full flex items-center justify-center bg-white/5 border border-white/10">
-            <FileText className="w-5 h-5 text-white" />
+            <FileText className="w-5 h-5 text-orange-500" />
           </div>
           <div>
-            <div className="text-xs text-white/50 mb-1 uppercase tracking-widest font-heading">Total Generated</div>
+            <div className="text-xs text-white/50 mb-1 uppercase tracking-widest font-heading">Reports Generated</div>
             <div className="text-3xl font-heading font-bold text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">124</div>
           </div>
         </GlassCard>
         <GlassCard className="p-6 flex items-center gap-5 hover:scale-[1.02] transition-transform duration-300">
           <div className="w-12 h-12 rounded-full flex items-center justify-center bg-white/5 border border-white/10">
-            <Database className="w-5 h-5 text-white" />
+            <Database className="w-5 h-5 text-orange-500" />
           </div>
           <div>
-            <div className="text-xs text-white/50 mb-1 uppercase tracking-widest font-heading">Data Processed</div>
+            <div className="text-xs text-white/50 mb-1 uppercase tracking-widest font-heading">Delta Lake Processed</div>
             <div className="text-3xl font-heading font-bold text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">4.2 TB</div>
           </div>
         </GlassCard>
         <GlassCard className="p-6 flex items-center gap-5 hover:scale-[1.02] transition-transform duration-300">
           <div className="w-12 h-12 rounded-full flex items-center justify-center bg-white/5 border border-white/10">
-            <Calendar className="w-5 h-5 text-white" />
+            <Calendar className="w-5 h-5 text-orange-500" />
           </div>
           <div>
-            <div className="text-xs text-white/50 mb-1 uppercase tracking-widest font-heading">Scheduled Runs</div>
+            <div className="text-xs text-white/50 mb-1 uppercase tracking-widest font-heading">MLflow Models Run</div>
             <div className="text-3xl font-heading font-bold text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">8</div>
           </div>
         </GlassCard>

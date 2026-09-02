@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { Building2, CalendarDays, ClipboardCheck, BarChart2, Sparkles, Send } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import GlassCard from '../../components/shared/GlassCard';
@@ -150,10 +151,55 @@ const OverviewPage = () => {
             {isLoading && <LoadingBubble />}
             {!isLoading && lastGenieMsg && (
               <div className="text-sm">
-                <p className="mb-3 text-white leading-relaxed">{lastGenieMsg.content}</p>
+                <div className="mb-3 text-white leading-relaxed prose prose-invert max-w-none prose-sm prose-p:my-2 prose-headings:my-3">
+                  <ReactMarkdown>{lastGenieMsg.content}</ReactMarkdown>
+                </div>
+                
+                {/* Render Predictive Insight if flagged */}
+                {lastGenieMsg.isPredictive && (
+                  <div className="mt-4 bg-[#0A0D16] border border-orange-500/30 rounded-xl overflow-hidden shadow-[0_0_20px_rgba(249,115,22,0.1)]">
+                    <div className="bg-[#FFFFFF]/5 px-4 py-2 border-b border-orange-500/20 flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_8px_#f97316] animate-pulse"></div>
+                      <span className="text-xs font-bold text-white uppercase tracking-widest">Mosaic AI Predictive Model</span>
+                      <div className="ml-auto flex items-center gap-2">
+                        <span className="text-[10px] text-white/50 border border-white/10 px-2 py-0.5 rounded-md">MLflow: campus_avail_v2</span>
+                        <span className="text-[10px] text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded-md border border-orange-500/20">Confidence: 94%</span>
+                      </div>
+                    </div>
+                    
+                    <div className="p-5 space-y-4">
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[10px] uppercase tracking-widest text-[#FFFFFF]/50 font-bold">Current Status</span>
+                        <span className="text-sm text-red-400 font-medium">0 Rooms officially available for 80+ capacity.</span>
+                      </div>
+                      
+                      <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-[#FFFFFF]/10 to-transparent"></div>
+                      
+                      <div className="flex gap-4">
+                        <div className="w-1.5 rounded-full bg-gradient-to-b from-orange-400 to-[#888888]"></div>
+                        <div>
+                          <span className="text-[10px] uppercase tracking-widest text-orange-400 font-bold">High Probability Opening</span>
+                          <h3 className="text-lg font-heading font-bold text-[#FFFFFF] mt-1 mb-2">Room B203 <span className="text-sm font-normal text-[#FFFFFF]/50">(Capacity: 120)</span></h3>
+                          <p className="text-sm text-[rgba(240,244,255,0.7)] leading-relaxed">
+                            Based on historical Delta Lake logs, a recurring <strong>Friday 3:00 PM - 5:00 PM</strong> lecture (CS-401) scheduled here has been <span className="text-[#FFFFFF] border-b border-[#FFFFFF]/30">cancelled 4 out of the last 6 Fridays</span>.
+                          </p>
+                          <div className="mt-4 flex items-center gap-3">
+                            <button className="bg-orange-500 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors shadow-[0_0_15px_rgba(249,115,22,0.3)]">
+                              Auto-Book if Cancelled
+                            </button>
+                            <button className="border border-[#FFFFFF]/20 text-[#FFFFFF] text-xs font-bold px-4 py-2 rounded-lg hover:bg-[#FFFFFF]/5 transition-colors">
+                              View Delta Analytics
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {lastGenieMsg.sql && (
                   <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-white/10">
-                    <SqlReveal sql={lastGenieMsg.sql} description="Generated SQL" />
+                    <SqlReveal sql={lastGenieMsg.sql} description="Databricks SQL Serverless Execution" />
                     {lastGenieMsg.attachment_id && (
                       <QueryDataReveal convId={lastGenieMsg.conversation_id} msgId={lastGenieMsg.message_id} attachId={lastGenieMsg.attachment_id} />
                     )}

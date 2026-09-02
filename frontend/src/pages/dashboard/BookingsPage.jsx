@@ -27,47 +27,54 @@ const BookingsPage = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-8 pb-12">
+      <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-4">
+        <div>
+          <h1 className="text-3xl font-heading font-black text-white mb-2">My Bookings</h1>
+          <p className="text-white/50 text-sm font-medium">Manage your upcoming schedules and reservations.</p>
+        </div>
+      </div>
+
       <GlassCard className="p-0 overflow-hidden">
         <table className="w-full text-sm text-left">
-          <thead className="text-[rgba(240,244,255,0.45)] text-xs uppercase bg-[#0F1420]/50 border-b border-[rgba(255,255,255,0.08)]">
+          <thead className="text-white/50 text-xs tracking-widest uppercase bg-black/40 border-b border-white/10">
             <tr>
-              <th className="px-6 py-4 font-medium">Room</th>
-              <th className="px-6 py-4 font-medium">Date</th>
-              <th className="px-6 py-4 font-medium">Time</th>
-              <th className="px-6 py-4 font-medium">Purpose</th>
-              <th className="px-6 py-4 font-medium">Status</th>
-              <th className="px-6 py-4 font-medium text-right">Actions</th>
+              <th className="px-6 py-5 font-bold">Room</th>
+              <th className="px-6 py-5 font-bold">Date</th>
+              <th className="px-6 py-5 font-bold">Time</th>
+              <th className="px-6 py-5 font-bold">Purpose</th>
+              <th className="px-6 py-5 font-bold">Status</th>
+              <th className="px-6 py-5 font-bold text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="6" className="px-6 py-12 text-center text-[rgba(240,244,255,0.45)]">
+                <td colSpan="6" className="px-6 py-16 text-center text-white/50 font-medium">
                   Loading bookings...
                 </td>
               </tr>
             ) : myBookings.length > 0 ? (
               myBookings.map((booking) => (
-                <tr key={booking.id} className="border-b border-[rgba(255,255,255,0.04)] last:border-0 hover:bg-white/[0.02] transition-colors">
-                  <td className="px-6 py-4 font-medium">{booking.room_name || booking.room}</td>
-                  <td className="px-6 py-4 text-[rgba(240,244,255,0.7)]">{booking.date}</td>
-                  <td className="px-6 py-4 text-[rgba(240,244,255,0.7)]">{booking.start_time} - {booking.end_time}</td>
-                  <td className="px-6 py-4 text-[rgba(240,244,255,0.7)] truncate max-w-[200px]">{booking.purpose}</td>
-                  <td className="px-6 py-4">
+                <tr key={booking.id} className="border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors group">
+                  <td className="px-6 py-5 font-bold text-white text-base">{booking.room_name || booking.room}</td>
+                  <td className="px-6 py-5 text-white/70 font-medium">{booking.date}</td>
+                  <td className="px-6 py-5 text-white/70 font-medium">{booking.start_time} - {booking.end_time}</td>
+                  <td className="px-6 py-5 text-white/70 truncate max-w-[200px]">{booking.purpose}</td>
+                  <td className="px-6 py-5">
                     <StatusBadge status={booking.status} />
                   </td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="px-6 py-5 text-right">
                     {booking.status === 'pending' && (
-                      <button onClick={() => handleCancel(booking.id)} className="text-red-400 text-xs hover:underline font-medium">Cancel</button>
+                      <button onClick={() => handleCancel(booking.id)} className="text-red-400 text-sm hover:text-red-300 hover:underline font-bold transition-colors">Cancel</button>
                     )}
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="6" className="px-6 py-12 text-center text-[rgba(240,244,255,0.45)]">
-                  No bookings yet.
+                <td colSpan="6" className="px-6 py-20 text-center">
+                  <span className="text-white/30 text-lg font-medium">No bookings yet.</span>
                 </td>
               </tr>
             )}
