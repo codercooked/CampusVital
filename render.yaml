@@ -24,3 +24,7 @@ services:
       - key: VITE_API_BASE_URL
         value: https://campusvitals-backend.onrender.com
     rootDir: frontend
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
