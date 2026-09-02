@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Building2, CalendarDays, ClipboardCheck, BarChart2, Sparkles, Send } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import GlassCard from '../../components/shared/GlassCard';
@@ -7,6 +7,7 @@ import LoadingBubble from '../../components/shared/LoadingBubble';
 import SqlReveal from '../../components/shared/SqlReveal';
 import QueryDataReveal from '../../components/shared/QueryDataReveal';
 import { useGenie } from '../../hooks/useGenie';
+import { fetchOverview, fetchBookings } from '../../lib/api';
 
 // Premium Tooltip for the chart
 const CustomTooltip = ({ active, payload, label }) => {
@@ -32,6 +33,27 @@ const CustomTooltip = ({ active, payload, label }) => {
 const OverviewPage = () => {
   const { messages, isLoading, sendMessage } = useGenie();
   const [inputValue, setInputValue] = useState('');
+  
+  const [overview, setOverview] = useState({
+    totalRooms: 47,
+    totalBookingsToday: 0,
+    pendingApprovals: 0,
+    occupancyRate: 0
+  });
+  const [recentBookings, setRecentBookings] = useState([]);
+
+  useEffect(() => {
+    fetchOverview().then(data => {
+      if (data) setOverview(data);
+    }).catch(console.error);
+
+    fetchBookings().then(data => {
+      if (data) {
+        // Show 6 most recent bookings
+        setRecentBookings(data.slice(-6).reverse());
+      }
+    }).catch(console.error);
+  }, []);
 
   const handleSend = (e) => {
     e.preventDefault();
@@ -43,19 +65,10 @@ const OverviewPage = () => {
   const lastGenieMsg = [...messages].reverse().find(m => m.role === 'genie');
 
   const stats = [
-    { label: 'Total Rooms', value: '47', icon: Building2, color: '#888888' },
-    { label: 'Bookings Today', value: '12', icon: CalendarDays, color: '#FFFFFF' },
-    { label: 'Pending Approvals', value: '3', icon: ClipboardCheck, color: '#555555' },
-    { label: 'Occupancy Rate', value: '89%', icon: BarChart2, color: '#FFFFFF' },
-  ];
-
-  const recentBookings = [
-    { room: 'Room 101', user: 'Alice Smith', time: '10:00 AM - 11:30 AM', status: 'approved' },
-    { room: 'Lab 4', user: 'Bob Johnson', time: '11:00 AM - 01:00 PM', status: 'pending' },
-    { room: 'Seminar Hall A', user: 'Charlie Lee', time: '02:00 PM - 04:00 PM', status: 'approved' },
-    { room: 'Conference Room B', user: 'Diana Prince', time: '03:30 PM - 04:30 PM', status: 'rejected' },
-    { room: 'Room 205', user: 'Evan Wright', time: '09:00 AM - 10:00 AM', status: 'approved' },
-    { room: 'Library Pod 2', user: 'Fiona Gallagher', time: '01:00 PM - 03:00 PM', status: 'pending' },
+    { label: 'Total Rooms', value: overview.totalRooms, icon: Building2, color: '#888888' },
+    { label: 'Bookings Today', value: overview.totalBookingsToday, icon: CalendarDays, color: '#FFFFFF' },
+    { label: 'Pending Approvals', value: overview.pendingApprovals, icon: ClipboardCheck, color: '#555555' },
+    { label: 'Occupancy Rate', value: `${Math.round(overview.occupancyRate)}%`, icon: BarChart2, color: '#FFFFFF' },
   ];
 
   const chartData = [
@@ -102,14 +115,16 @@ const OverviewPage = () => {
               </tr>
             </thead>
             <tbody>
-              {recentBookings.map((booking, i) => (
+              {recentBookings.length > 0 ? recentBookings.map((booking, i) => (
                 <tr key={i} className="border-b border-[rgba(255,255,255,0.05)] last:border-0 hover:bg-white/5 transition-colors">
-                  <td className="py-4 font-medium text-white">{booking.room}</td>
-                  <td className="py-4 text-[rgba(240,244,255,0.6)]">{booking.user}</td>
-                  <td className="py-4 text-[rgba(240,244,255,0.6)]">{booking.time}</td>
+                  <td className="py-4 font-medium text-white">{booking.room_name || booking.room}</td>
+                  <td className="py-4 text-[rgba(240,244,255,0.6)]">{booking.user_name || booking.user}</td>
+                  <td className="py-4 text-[rgba(240,244,255,0.6)]">{booking.start_time} - {booking.end_time}</td>
                   <td className="py-4"><StatusBadge status={booking.status} /></td>
                 </tr>
-              ))}
+              )) : (
+                <tr><td colSpan="4" className="py-8 text-center text-white/50">No recent bookings</td></tr>
+              )}
             </tbody>
           </table>
         </GlassCard>

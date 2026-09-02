@@ -63,7 +63,7 @@ router.get('/user/:userId', (req, res) => {
 router.patch('/:id/status', (req, res) => {
   try {
     const { status } = req.body;
-    if (!['approved', 'rejected'].includes(status)) {
+    if (!['approved', 'rejected', 'cancelled'].includes(status)) {
       return res.status(400).json({ error: 'Invalid status' });
     }
 
