@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: campusvitals-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    rootDir: backend
+
+  - type: web
+    name: campusvitals-frontend
+    env: static
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VITE_API_BASE_URL
+        value: https://campusvitals-backend.onrender.com
+    rootDir: frontend
