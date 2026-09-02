@@ -58,21 +58,45 @@ db.transaction(() => {
   ];
   
   let roomId = 1;
+  const specificRooms = [
+    { name: 'CS-101', building: 'Block A', floor: 1, capacity: 60, type: 'classroom' },
+    { name: 'CS-102', building: 'Block A', floor: 1, capacity: 60, type: 'classroom' },
+    { name: 'CS-201', building: 'Block A', floor: 2, capacity: 80, type: 'classroom' },
+    { name: 'CS-Lab 1', building: 'Block A', floor: 2, capacity: 45, type: 'lab' },
+    { name: 'CS-Lab 2', building: 'Block A', floor: 3, capacity: 45, type: 'lab' },
+    { name: 'ECE-101', building: 'Block B', floor: 1, capacity: 60, type: 'classroom' },
+    { name: 'ECE-Lab', building: 'Block B', floor: 2, capacity: 40, type: 'lab' },
+    { name: 'ME-101', building: 'Block B', floor: 1, capacity: 60, type: 'classroom' },
+    { name: 'AI Lab', building: 'Block C', floor: 2, capacity: 50, type: 'lab' },
+    { name: 'Hardware Lab', building: 'Block C', floor: 1, capacity: 40, type: 'lab' },
+    { name: 'Conference Room 1', building: 'Block C', floor: 3, capacity: 30, type: 'conference' },
+    { name: 'Seminar Hall 1', building: 'Block B', floor: 3, capacity: 150, type: 'seminar_hall' },
+    { name: 'Main Auditorium', building: 'Block D', floor: 1, capacity: 300, type: 'auditorium' },
+    { name: 'Central Library', building: 'Block D', floor: 2, capacity: 200, type: 'library' }
+  ];
+
+  for (const r of specificRooms) {
+    const amenities = amenitiesList[Math.floor(Math.random() * amenitiesList.length)];
+    insertRoom.run(roomId, r.name, r.building, r.floor, r.capacity, r.type, amenities);
+    roomId++;
+  }
+
   const generateRooms = (building, count, types) => {
     for (let i = 1; i <= count; i++) {
       const type = types[i % types.length];
-      const floor = (i % 4) + 1;
-      const capacity = Math.floor(Math.random() * (200 - 30 + 1)) + 30;
+      const floor = ((i - 1) % 4) + 1;
+      const roomNum = floor * 100 + i;
+      const capacity = Math.floor(Math.random() * (120 - 30 + 1)) + 30;
       const amenities = amenitiesList[Math.floor(Math.random() * amenitiesList.length)];
-      insertRoom.run(roomId, `${building}-${100 * floor + i}`, building, floor, capacity, type, amenities);
+      insertRoom.run(roomId, `${building}-${roomNum}`, building, floor, capacity, type, amenities);
       roomId++;
     }
   };
 
-  generateRooms('Block A', 14, ['classroom', 'lab']);
-  generateRooms('Block B', 12, ['classroom', 'seminar_hall']);
-  generateRooms('Block C', 11, ['lab', 'conference']);
-  generateRooms('Block D', 10, ['auditorium', 'library']);
+  generateRooms('Block A', 10, ['classroom', 'lab']);
+  generateRooms('Block B', 10, ['classroom', 'seminar_hall']);
+  generateRooms('Block C', 8, ['lab', 'conference']);
+  generateRooms('Block D', 6, ['auditorium', 'library']);
 
   const getRecentDate = (offset) => {
     const d = new Date();

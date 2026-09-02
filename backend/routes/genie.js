@@ -63,9 +63,23 @@ const handlePotentialBooking = (answerText, originalQuestion) => {
     }
 
     if (parsed && parsed.action === 'BOOK_ROOM') {
-      const roomNumberMatch = parsed.room_name.match(/\d+/);
-      const roomSearch = roomNumberMatch ? roomNumberMatch[0] : parsed.room_name;
-      const room = db.prepare('SELECT id, name FROM rooms WHERE name LIKE ? LIMIT 1').get(`%${roomSearch}%`);
+      const rawName = (parsed.room_name || '').trim();
+      const normalizedQuery = rawName.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+      // 1. Try exact or normalized match (e.g. "CS 101" -> "CS-101")
+      let room = db.prepare('SELECT id, name FROM rooms WHERE LOWER(name) = LOWER(?) LIMIT 1').get(rawName);
+      if (!room) {
+        room = db.prepare("SELECT id, name FROM rooms WHERE LOWER(REPLACE(REPLACE(name, '-', ''), ' ', '')) = ? LIMIT 1").get(normalizedQuery);
+      }
+      if (!room) {
+        room = db.prepare('SELECT id, name FROM rooms WHERE LOWER(name) LIKE LOWER(?) LIMIT 1').get(`%${rawName}%`);
+      }
+      if (!room) {
+        const roomNumberMatch = rawName.match(/\d+/);
+        if (roomNumberMatch) {
+          room = db.prepare('SELECT id, name FROM rooms WHERE name LIKE ? LIMIT 1').get(`%${roomNumberMatch[0]}%`);
+        }
+      }
       
       if (!room) {
         return `I couldn't find a room matching "${parsed.room_name}". Could you be more specific?`;
